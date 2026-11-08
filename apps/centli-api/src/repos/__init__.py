@@ -1,11 +1,9 @@
-from typing import TypeVar
 from uuid import UUID
 
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlmodel import select
+from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.models import BaseModel
-
-ModelType = TypeVar("ModelType", bound=BaseModel)
 
 
 class BaseRepo[ModelType: BaseModel]:
@@ -15,7 +13,9 @@ class BaseRepo[ModelType: BaseModel]:
         self.db_session = db_session
 
     async def get_by_id(self, uuid: UUID) -> ModelType | None:
-        raise NotImplementedError()
+        stmt = select(self.model).where(self.model.id == uuid)
+        result = await self.db_session.exec(stmt)
+        return result.first()
 
 
 __all__ = ["BaseRepo"]

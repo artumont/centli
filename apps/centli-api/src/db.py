@@ -6,11 +6,11 @@ from sqlalchemy import text
 from sqlalchemy.engine import Result
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
-    AsyncSession,
     async_sessionmaker,
     create_async_engine,
 )
 from sqlalchemy.sql.expression import Executable
+from sqlmodel.ext.asyncio.session import AsyncSession
 
 
 class DatabaseClient:
@@ -28,6 +28,7 @@ class DatabaseClient:
         self._engine: AsyncEngine = create_async_engine(url, echo=echo)
         self._session_factory: async_sessionmaker[AsyncSession] = async_sessionmaker(
             bind=self._engine,
+            class_=AsyncSession,
             expire_on_commit=False,
         )
 
