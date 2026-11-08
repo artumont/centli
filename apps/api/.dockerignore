@@ -1,7 +1,0 @@
-tmp/
-bin/
-.env
-*.test
-coverage.out
-.git
-.gitignore

@@ -1,1 +1,0 @@
-ALTER TABLE settings ADD COLUMN IF NOT EXISTS first_init_completed BOOLEAN NOT NULL DEFAULT false;
