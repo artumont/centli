@@ -12,11 +12,14 @@ class Config(BaseSettings):
     port: int = 80
     slow_request_ms: int = 1000
 
-    _database_host: str = "postgres"
-    _database_port: int = 5432
-    _database_name: str = "centil-db"
-    _database_role: str = "centil-api"
-    _database_password: str = ""
+    vault_path: str = "/data/secrets.vault"
+    master_key_file: str = "/run/secrets/vault_master_key"
+
+    database_host: str = "postgres"
+    database_port: int = 5432
+    database_name: str = "centil-db"
+    database_role: str = "centil-api"
+    database_password: str = ""
 
     model_config: ClassVar[SettingsConfigDict] = SettingsConfigDict(
         case_sensitive=False, env_file=(".env", ".env.dev"), extra="ignore"
@@ -24,11 +27,11 @@ class Config(BaseSettings):
 
     @property
     def database_url(self) -> str:
-        if not self._database_password:
+        if not self.database_password:
             return ""
         return (
-            f"postgresql+asyncpg://{self._database_role}:{quote(self._database_password, safe='')}"
-            f"@{self._database_host}:{self._database_port}/{self._database_name}"
+            f"postgresql+asyncpg://{self.database_role}:{quote(self.database_password, safe='')}"
+            f"@{self.database_host}:{self.database_port}/{self.database_name}"
         )
 
 

@@ -32,7 +32,7 @@ def get_db() -> Any:
     app = get_app_main()
     db = getattr(app, "db", None)
     if db is None:
-        raise HTTPException(status_code=503, detail="Database not configured")
+        raise HTTPException(status_code=503, detail="Database is not configured")
     return db
 
 

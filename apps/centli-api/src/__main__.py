@@ -4,6 +4,8 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from src.vault import SecureVault
+
 from .config import get_config
 from .db import DatabaseClient
 from .utils import utc_now
@@ -11,14 +13,17 @@ from .utils import utc_now
 APP_NAME = "centli-api"
 
 db: DatabaseClient | None = None
+vault: SecureVault | None = None
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None]:
     """Application lifecycle shutdown and startup."""
-    global db
+    global db, vault
 
     settings = get_config()
+
+    vault = SecureVault(settings.vault_path, settings.master_key_file)
 
     if settings.database_url:
         db = DatabaseClient(settings.database_url)
