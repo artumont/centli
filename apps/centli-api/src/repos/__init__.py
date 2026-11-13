@@ -23,7 +23,7 @@ class BaseRepo[ModelType: BaseModel]:
             uuid (UUID): Model entry id.
 
         Returns:
-            ModelType | None: The entry model.
+            The entry model or None if not found.
         """
         stmt = select(self.repo_model).where(col(self.repo_model.id) == uuid)
         result = await self.db_session.exec(stmt)
@@ -38,7 +38,7 @@ class BaseRepo[ModelType: BaseModel]:
         self.db_session.add(model)
         await self.db_session.flush()
 
-    async def update(self, uuid: UUID, fields: dict[str, Any]) -> ModelType | None:
+    async def update(self, uuid: UUID, fields: dict[str, Any]) -> ModelType:
         """Update primitive avoid using in services.
 
         Args:
@@ -49,7 +49,7 @@ class BaseRepo[ModelType: BaseModel]:
             EntryNotFound: If the entry is not found we throw this along with a message.
 
         Returns:
-            ModelType | None: The modified entry model.
+            The modified entry model.
         """
         instance = await self.get_by_id(uuid)
         if not instance:
@@ -67,7 +67,7 @@ class BaseRepo[ModelType: BaseModel]:
         with cascade over this primitive.
 
         Args:
-            uuid (UUID): _description_
+            uuid (UUID): The entry id to delete.
         """
         stmt = delete(self.repo_model).where(col(self.repo_model.id) == uuid)
         await self.db_session.exec(stmt)
