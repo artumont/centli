@@ -17,7 +17,7 @@ config.set_main_option("sqlalchemy.url", get_config().database_url)
 target_metadata = None
 
 
-def run_migrations_offline() -> None:
+def run_migrations_offline() -> None:  # noqa: D103
     context.configure(
         url=config.get_main_option("sqlalchemy.url"),
         target_metadata=target_metadata,
@@ -29,14 +29,14 @@ def run_migrations_offline() -> None:
         context.run_migrations()
 
 
-def do_run_migrations(connection) -> None:
+def do_run_migrations(connection) -> None:  # noqa: D103
     context.configure(connection=connection, target_metadata=target_metadata)
 
     with context.begin_transaction():
         context.run_migrations()
 
 
-async def run_migrations_online() -> None:
+async def run_migrations_online() -> None:  # noqa: D103
     connectable = async_engine_from_config(
         config.get_section(config.config_ini_section, {}),
         prefix="sqlalchemy.",

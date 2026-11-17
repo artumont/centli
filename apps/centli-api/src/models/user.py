@@ -4,6 +4,8 @@ from src.models import BaseModel
 
 
 class User(BaseModel):
+    """Model for the user table."""
+
     username: str
     password: str
 

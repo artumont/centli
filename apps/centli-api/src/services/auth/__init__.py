@@ -1,12 +1,9 @@
 import asyncio
-from typing import cast
 from uuid import UUID
 
 import bcrypt
 
-from src.db import DatabaseClient
 from src.models.user import User
-from src.repos import user
 from src.repos.user import UserRepo
 from src.services.auth.errors import IncorrectPassword, InvalidToken, UserNotFound
 from src.services.auth.token import TokenType, decode_jwt_token, generate_jwt_token
