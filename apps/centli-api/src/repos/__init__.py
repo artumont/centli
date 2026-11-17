@@ -14,7 +14,7 @@ class BaseRepo[ModelType: BaseModel]:
     repo_model: type[ModelType]
 
     def __init__(self, db_session: AsyncSession) -> None:
-        self.db_session = db_session
+        self.db_session: AsyncSession = db_session
 
     async def get_by_id(self, id: UUID) -> ModelType | None:
         """Read primitive.
