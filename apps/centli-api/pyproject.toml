@@ -22,3 +22,20 @@ dependencies = [
 dev = [
     "ruff>=0.17.4",
 ]
+
+[tool.ruff.lint]
+select = ["F", "E", "W", "I", "D", "DOC"]
+fixable = ["ALL"]
+ignore = [
+  "E501",   # Line too long
+  "D100",   # Missing docstring in public module
+  "D104",   # Missing docstring in public package
+  "D105",   # Missing docstring in magic methods
+  "D107",   # Missing docstring in __init__ constructors
+  "D415",   # Missing end punctuation in docstring's first line
+  "D400",   # First line should end with a period, question mark, or exclamation point
+  "D213",   # Multi-line docstring summary should start at the second line
+  "D203",   # 1 blank line required before class docstring
+  "D420",   # Section "Returns" appears after section "Raises" but should be before it
+  "DOC502", # Disables warnings for exceptions in docs not raised by the code
+]

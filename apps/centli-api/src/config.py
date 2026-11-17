@@ -26,6 +26,7 @@ class Config(BaseSettings):
 
     @property
     def database_url(self) -> str:
+        """Computed database url."""
         if not self.database_password:
             return ""
         return (
@@ -40,5 +41,6 @@ def get_config() -> Config:
 
     Returns:
         Config: Environment config object.
+
     """
     return Config()

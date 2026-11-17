@@ -6,5 +6,6 @@ def utc_now() -> datetime:
 
     Returns:
         A timezone-aware datetime set to now in UTC.
+
     """
     return datetime.now(UTC)

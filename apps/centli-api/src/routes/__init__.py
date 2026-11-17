@@ -6,6 +6,7 @@ def create_api_router() -> APIRouter:
 
     Returns:
         APIRouter: Router containing all versioned API routes.
+
     """
     router = APIRouter()
     # router.include_router(v1_router)

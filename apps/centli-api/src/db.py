@@ -18,10 +18,6 @@ class DatabaseClient:
 
     Supports both PostgreSQL (``asyncpg``) and SQLite (``aiosqlite``).
     The dialect is inferred from the connection URL.
-
-    Args:
-        url: SQLAlchemy async connection string.
-        echo: When ``True``, log all SQL statements (default ``False``).
     """
 
     def __init__(self, url: str, *, echo: bool = False) -> None:
@@ -49,7 +45,8 @@ class DatabaseClient:
                 result = await session.execute(statement)
 
         Returns:
-            A new async database session.
+            New async database session.
+
         """
         return self._session_factory()
 
@@ -60,6 +57,7 @@ class DatabaseClient:
 
         Returns:
             ``True`` if the server responds, ``False`` on any error.
+
         """
         try:
             async with self._engine.connect() as conn:
@@ -82,11 +80,12 @@ class DatabaseClient:
         is *not* committed automatically.
 
         Args:
-            stmt: A SQLAlchemy ``Executable`` (``select``, ``insert``,
+            stmt: SQLAlchemy ``Executable`` (``select``, ``insert``,
                 ``update``, ``delete``, ``text``, …) to execute.
 
         Returns:
-            A buffered SQLAlchemy result.
+            Buffered SQLAlchemy result.
+
         """
         session = self._session_factory()
         result = await session.execute(stmt)

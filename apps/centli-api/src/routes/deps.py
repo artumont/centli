@@ -13,6 +13,7 @@ def get_db(request: Request) -> Any:
 
     Raises:
         HTTPException: 503 if the database is not configured.
+
     """
     db = getattr(request.app, "db", None)
     if db is None:
