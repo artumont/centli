@@ -4,45 +4,33 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from src.vault import SecureVault
-
-from .config import get_config
+from .config import Config, get_config
 from .db import DatabaseClient
 from .utils import utc_now
 
 APP_NAME = "centli-api"
 
-db: DatabaseClient | None = None
-vault: SecureVault | None = None
-
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None]:
-    """Application lifecycle shutdown and startup."""
-    global db, vault
+    """Application lifecycle startup and shutdown."""
+    app.state.db = None
+    config: Config = app.state.config
 
-    settings = get_config()
-
-    vault = SecureVault(settings.vault_path, settings.master_key_file)
-
-    if settings.database_url:
-        db = DatabaseClient(settings.database_url)
+    if config.database_url:
+        app.state.db = DatabaseClient(config.database_url)
 
     yield
 
-    if db is not None:
-        await db.close()
-        db = None
+    if app.state.db is not None:
+        await app.state.db.close()
+        app.state.db = None
 
 
-def create_app() -> FastAPI:
-    """Build the fastapi application with middleware and API routes.
-
-    Returns:
-        FastAPI: Configured application instance.
-    """
-
+def create_app(config: Config | None = None) -> FastAPI:
+    """Build the FastAPI application with middleware and API routes."""
     app = FastAPI(title=APP_NAME, root_path="/api", lifespan=lifespan)
+    app.state.config = config or get_config()
 
     app.add_middleware(
         CORSMiddleware,
@@ -54,11 +42,6 @@ def create_app() -> FastAPI:
 
     @app.get("/health")
     async def health_check() -> dict[str, str]:
-        """Health check endpoint.
-
-        Returns:
-            dict[str, str]: Response containing status ("ok") and current UTC timestamp.
-        """
         return {"status": "ok", "timestamp": str(utc_now())}
 
     return app
@@ -70,10 +53,10 @@ app = create_app()
 if __name__ == "__main__":
     import uvicorn
 
-    settings = get_config()
+    config: Config = app.state.config
     uvicorn.run(
         "src.__main__:app",
-        host=settings.host,
-        port=settings.port,
+        host=config.host,
+        port=config.port,
         reload=False,
     )

@@ -12,14 +12,13 @@ class Config(BaseSettings):
     port: int = 80
     slow_request_ms: int = 1000
 
-    vault_path: str = "/data/secrets.vault"
-    master_key_file: str = "/run/secrets/vault_master_key"
-
     database_host: str = "postgres"
     database_port: int = 5432
     database_name: str = "centil-db"
     database_role: str = "centil-api"
     database_password: str = ""
+
+    hmac_secret: str = ""
 
     model_config: ClassVar[SettingsConfigDict] = SettingsConfigDict(
         case_sensitive=False, env_file=(".env", ".env.dev"), extra="ignore"
