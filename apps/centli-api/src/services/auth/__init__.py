@@ -12,15 +12,7 @@ _DUMMY_HASH = bcrypt.hashpw(b"dummy", bcrypt.gensalt())
 
 
 class AuthService:
-    """_summary_
-
-    Attributes:
-        user_repo: _description_
-        signing_secret: _description_
-        _access_token_ttl: _description_
-        _refresh_token_ttl: _description_
-
-    """
+    """Authetication and session generation service."""
 
     def __init__(
         self,
@@ -91,6 +83,7 @@ class AuthService:
                 str(user_id),
                 self._access_token_ttl,
                 token_type=TokenType.ACCESS,
+                extra_claims={"is_admin": possible_user.is_admin},
             ),
             TokenType.REFRESH: generate_jwt_token(
                 self.signing_secret,
