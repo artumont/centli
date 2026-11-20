@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from .config import Config, get_config
 from .db import DatabaseClient
+from .middleware import IdentityMiddleware
 from .utils import utc_now
 
 APP_NAME = "centli-api"
@@ -39,6 +40,7 @@ def create_app(config: Config | None = None) -> FastAPI:
         allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH"],
         allow_headers=["*"],
     )
+    app.add_middleware(IdentityMiddleware)
 
     @app.get("/health")
     async def health_check() -> dict[str, str]:

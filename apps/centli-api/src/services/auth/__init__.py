@@ -12,7 +12,7 @@ _DUMMY_HASH = bcrypt.hashpw(b"dummy", bcrypt.gensalt())
 
 
 class AuthService:
-    """Authetication and session generation service."""
+    """Authentication and session generation service."""
 
     def __init__(
         self,
