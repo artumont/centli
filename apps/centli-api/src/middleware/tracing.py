@@ -7,17 +7,18 @@ trace_id_ctx: ContextVar[str | None] = ContextVar("trace_id", default=None)
 
 
 class TracingMiddleware:
-    """Request tracing pure ASGI Middleware
+    """Request and error tracing middleware.
 
-    Meant to track errors and normal requests to make
-    error reports easier and administration faster.
+    Produces:
+        x-trace-id Header: Used by the user when reporting an error.
+        trace_id_ctx ContextVar: Used internally to attach it to logs.
     """
 
     def __init__(self, app: ASGIApp) -> None:
         self.app: ASGIApp = app
 
     async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
-        """Attaches the `trace_id` to the context."""
+        """Attaches the `trace_id` to the context and request headers."""
         if scope["type"] != "http":
             await self.app(scope, receive, send)
             return

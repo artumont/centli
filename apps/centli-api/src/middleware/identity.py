@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 
 class IdentityMiddleware(BaseHTTPMiddleware):
-    """Attaches identification before requests.
+    """Caller identification middleware.
 
     This middleware never blocks a request. Its sole job is to
     resolve *who* is calling, if anyone, and attach it to
@@ -32,7 +32,7 @@ class IdentityMiddleware(BaseHTTPMiddleware):
     async def dispatch(
         self, request: Request, call_next: RequestResponseEndpoint
     ) -> Response:
-        """Dispatcher for the middleware, purpose explained in the actual classmethod."""
+        """Attaches the identity to the request state."""
         request.state.identity = None
         db_client: DatabaseClient = request.app.state.db
         token = request.cookies.get("access_token")
