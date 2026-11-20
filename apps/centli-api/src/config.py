@@ -37,10 +37,5 @@ class Config(BaseSettings):
 
 @lru_cache
 def get_config() -> Config:
-    """Get the environment config.
-
-    Returns:
-        Config: Environment config object.
-
-    """
+    """Get the needed environment variables."""
     return Config()

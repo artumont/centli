@@ -1,11 +1,14 @@
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
+from venv import logger
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
 from .config import Config, get_config
 from .db import DatabaseClient
+from .logs import configure_logging
 from .middleware import IdentityMiddleware
 from .utils import utc_now
 
@@ -48,12 +51,31 @@ def create_app(config: Config | None = None) -> FastAPI:
 
     return app
 
+    @app.exception_handler(Exception)
+    async def global_exception_handler(
+        request: Request, exc: Exception
+    ) -> JSONResponse:
+        logger.error(
+            "Unhandled exception on %s %s",
+            request.method,
+            request.url.path,
+            exc_info=exc,
+        )
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Internal server error. Please contact support.",
+            },
+        )
+
 
 app = create_app()
 
 
 if __name__ == "__main__":
     import uvicorn
+
+    configure_logging()
 
     config: Config = app.state.config
     uvicorn.run(
