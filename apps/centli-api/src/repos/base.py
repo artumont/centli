@@ -33,7 +33,7 @@ class BaseRepo[ModelType: BaseModel]:
         return result.first()
 
     async def get_list(self, offset: int = 0, *, limit: int = 100) -> list[ModelType]:
-        """Get a list of users starting at an offset orderd by id.
+        """Get a list of users starting at an offset ordered by id.
 
         Args:
             offset (int): The offset for the lookup. Defaults to 0.
